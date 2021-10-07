@@ -4,6 +4,12 @@ import { NgModule } from '@angular/core';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { RouterModule } from '@angular/router';
 
+// NGRX
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+
+import { environment } from 'src/environments/environment';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './shared/header/header.component';
@@ -41,6 +47,11 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     AlertModule.forRoot({ maxMessages: 5, timeout: 5000, position: 'right' }),
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
+    StoreModule.forRoot({}, {}),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: environment.production,
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],
