@@ -7,9 +7,9 @@ import { RouterModule } from '@angular/router';
 // NGRX
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { reducers, metaReducers } from './store';
 
-import { environment } from 'src/environments/environment';
-
+// components / modules
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './shared/header/header.component';
@@ -24,6 +24,9 @@ import { TopBarComponent } from './shared/top-bar/top-bar.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CartModule } from './modules/cart/cart.module';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { environment } from '../environments/environment';
+import { EffectsModule } from '@ngrx/effects';
+import { CustomerSupportEffects } from './store/effects/customer-support.effects';
 
 @NgModule({
   declarations: [
@@ -52,6 +55,15 @@ import { ModalModule } from 'ngx-bootstrap/modal';
       maxAge: 25,
       logOnly: environment.production,
     }),
+    StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true,
+      },
+    }),
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
+    EffectsModule.forRoot([CustomerSupportEffects]),
   ],
   providers: [],
   bootstrap: [AppComponent],
