@@ -10,13 +10,8 @@ import { map, switchMap } from 'rxjs/operators';
 export class AuthService {
   baseUrl: string = 'http://localhost:3000/users/';
 
-  private userSource = new BehaviorSubject<fromAuthModels.User>(
-    fromAuthModels.UserModel
-  );
-  user = this.userSource.asObservable();
-
   constructor(private http: HttpClient) {}
-  //Fake Login API
+
   login(username: string, password: string): Observable<any> {
     return this.http
       .get(this.baseUrl + '?username=' + username)
@@ -25,9 +20,5 @@ export class AuthService {
           users[0] ? of(users[0]) : throwError('Unable to login')
         )
       );
-  }
-
-  updatedUserSelection(user: fromAuthModels.User) {
-    this.userSource.next(user);
   }
 }
