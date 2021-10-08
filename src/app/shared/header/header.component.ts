@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
-import { AuthService } from 'src/app/modules/auth/resources/auth.service';
-import { User } from 'src/app/modules/auth/resources/auth';
+import * as fromHeaderSelectors from '../../store/selectors/header.selectors';
+import { AppState } from '../../store';
 
 @Component({
   selector: 'app-header',
@@ -9,18 +11,13 @@ import { User } from 'src/app/modules/auth/resources/auth';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  user: User;
+  vm$: Observable<fromHeaderSelectors.HeaderViewModel>;
 
-  constructor(private authService: AuthService) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
-    const userobserver = {
-      next: (user) => {
-        this.user = user;
-      },
-      error: (err) => console.error(err),
-    };
-
-    this.authService.user.subscribe(userobserver);
+    this.vm$ = this.store.pipe(
+      select(fromHeaderSelectors.selectHeaderViewModel)
+    );
   }
 }

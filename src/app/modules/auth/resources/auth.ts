@@ -11,3 +11,5 @@ export var UserModel: User = {
   email: null,
   isadmin: false,
 };
+
+export const storageKey = '[ngrx_shoppingapp] user_info';

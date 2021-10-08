@@ -9,7 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "generate": "node ./server/generate.js > ./server/database.json",
-    "server": "json-server --watch ./server/database.json",
+    "server": "json-server --delay 1500 --watch ./server/database.json",
     "dev": "concurrently \"npm run server\" \"npm run start\""
   },
   "private": true,

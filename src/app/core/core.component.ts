@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../modules/auth/resources/auth';
-import { AuthService } from '../modules/auth/resources/auth.service';
+import { Store } from '@ngrx/store';
 
+import { AppState } from '../store';
+import * as fromAuthActions from '../store/actions/auth.actions';
+import { storageKey, User } from '../modules/auth/resources/auth';
 import { MockApiCartService } from '../modules/cart/resources/mock-api-cart.service';
 
 @Component({
@@ -11,17 +13,16 @@ import { MockApiCartService } from '../modules/cart/resources/mock-api-cart.serv
 })
 export class CoreComponent implements OnInit {
   constructor(
-    private authService: AuthService,
-    private cartService: MockApiCartService
+    private cartService: MockApiCartService,
+    private store: Store<AppState>
   ) {}
 
   ngOnInit(): void {
-    const user: User = JSON.parse(localStorage.getItem('user'));
+    const user: User = JSON.parse(localStorage.getItem(storageKey));
 
     if (user) {
       this.updateShoppingCart(user.id);
-
-      this.authService.updatedUserSelection(user);
+      this.store.dispatch(fromAuthActions.browserReload({ user }));
     }
   }
 
