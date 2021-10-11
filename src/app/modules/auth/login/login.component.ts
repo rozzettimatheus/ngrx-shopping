@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Store } from '@ngrx/store';
 
 import { AppState } from '../../../store';
-import * as AuthActions from '../../../store/actions/auth.actions';
+import * as fromAuthActions from '../../../store/actions/auth.actions';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +16,6 @@ export class LoginComponent {
   onSubmit(f: NgForm) {
     const { username, password } = f.value;
 
-    this.store.dispatch(AuthActions.loginPage({ username, password }));
+    this.store.dispatch(fromAuthActions.loginPage({ username, password }));
   }
 }

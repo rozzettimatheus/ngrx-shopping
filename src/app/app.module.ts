@@ -65,6 +65,10 @@ import { StorageEffects } from './store/effects/storage.effects';
       runtimeChecks: {
         strictStateImmutability: true,
         strictActionImmutability: true,
+        strictStateSerializability: true,
+        strictActionSerializability: true,
+        strictActionTypeUniqueness: true,
+        strictActionWithinNgZone: true,
       },
     }),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
