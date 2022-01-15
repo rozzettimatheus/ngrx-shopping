@@ -4,6 +4,7 @@ import { AlertService } from 'ngx-alerts';
 import { tap } from 'rxjs/operators';
 
 import * as fromAuthActions from '../actions/auth.actions';
+import * as fromProductActions from '../../modules/products/state/product.actions';
 
 @Injectable()
 export class AlertEffects {
@@ -51,6 +52,18 @@ export class AlertEffects {
         ofType(fromAuthActions.logout),
         tap(() => setTimeout(() => this.alert.info('Come back soon!'), 2000))
       ),
+    { dispatch: false }
+  );
+
+  unableToLoadProducts$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(fromProductActions.loadProductsFailure),
+        tap(() =>
+          setTimeout(() => this.alert.danger('Unable to load products'), 2000)
+        )
+      ),
+
     { dispatch: false }
   );
 

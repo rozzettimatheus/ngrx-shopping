@@ -7,7 +7,16 @@ import { RouterModule } from '@angular/router';
 // NGRX
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
+
 import { reducers, metaReducers } from './store';
+import { CustomerSupportEffects } from './store/effects/customer-support.effects';
+import { SpinnerEffects } from './store/effects/spinner.effects';
+import { AlertEffects } from './store/effects/alert.effects';
+import { RouteEffects } from './store/effects/route.effects';
+import { ModalEffects } from './store/effects/modal.effects';
+import { StorageEffects } from './store/effects/storage.effects';
 
 // components / modules
 import { AppRoutingModule } from './app-routing.module';
@@ -25,13 +34,6 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CartModule } from './modules/cart/cart.module';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { environment } from '../environments/environment';
-import { EffectsModule } from '@ngrx/effects';
-import { CustomerSupportEffects } from './store/effects/customer-support.effects';
-import { SpinnerEffects } from './store/effects/spinner.effects';
-import { AlertEffects } from './store/effects/alert.effects';
-import { RouteEffects } from './store/effects/route.effects';
-import { ModalEffects } from './store/effects/modal.effects';
-import { StorageEffects } from './store/effects/storage.effects';
 
 @NgModule({
   declarations: [
@@ -55,11 +57,6 @@ import { StorageEffects } from './store/effects/storage.effects';
     AlertModule.forRoot({ maxMessages: 5, timeout: 5000, position: 'right' }),
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
-    StoreModule.forRoot({}, {}),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25,
-      logOnly: environment.production,
-    }),
     StoreModule.forRoot(reducers, {
       metaReducers,
       runtimeChecks: {
@@ -71,6 +68,10 @@ import { StorageEffects } from './store/effects/storage.effects';
         strictActionWithinNgZone: true,
       },
     }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: environment.production,
+    }),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     EffectsModule.forRoot([
       CustomerSupportEffects,
@@ -80,6 +81,7 @@ import { StorageEffects } from './store/effects/storage.effects';
       ModalEffects,
       StorageEffects,
     ]),
+    StoreRouterConnectingModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

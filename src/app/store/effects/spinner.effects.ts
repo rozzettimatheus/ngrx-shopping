@@ -4,6 +4,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { tap } from 'rxjs/operators';
 
 import * as fromAuthActions from '../actions/auth.actions';
+import * as fromProductActions from '../../modules/products/state/product.actions';
 
 @Injectable()
 export class SpinnerEffects {
@@ -11,7 +12,12 @@ export class SpinnerEffects {
   spinnerOn$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(fromAuthActions.loginPage, fromAuthActions.loginModal),
+        ofType(
+          fromAuthActions.loginPage,
+          fromAuthActions.loginModal,
+          fromProductActions.loadProducts,
+          fromProductActions.loadAdminProducts
+        ),
         tap(() => this.spinner.show())
       ),
     { dispatch: false }
@@ -20,7 +26,12 @@ export class SpinnerEffects {
   spinnerOff$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(fromAuthActions.loginSuccess, fromAuthActions.loginFailure),
+        ofType(
+          fromAuthActions.loginSuccess,
+          fromAuthActions.loginFailure,
+          fromProductActions.loadProductsSuccess,
+          fromProductActions.loadProductsFailure
+        ),
         tap(() => this.spinner.hide())
       ),
     { dispatch: false }

@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MockProductApiService } from '../resources/mock-product-api.service';
 import { AlertService } from 'ngx-alerts';
-import { NgxSpinnerService } from 'ngx-spinner';
-import * as fromProductModels from '../resources/product';
 import { PaginationService } from 'src/app/shared/services/pagination.service';
 import { environment } from 'src/environments/environment';
+import { select, Store } from '@ngrx/store';
+import { AppState } from 'src/app/store';
+import { loadAdminProducts } from '../state/product.actions';
+import { Observable } from 'rxjs';
+
+import * as fromProductSelectors from '../state/product.selectors';
 
 @Component({
   selector: 'app-product-list',
@@ -15,45 +19,31 @@ export class ProductListComponent implements OnInit {
   constructor(
     private productService: MockProductApiService,
     private alertService: AlertService,
-    private spinner: NgxSpinnerService,
-    private paginationService: PaginationService
+    private paginationService: PaginationService,
+    private store: Store<AppState>
   ) {}
 
-  products: fromProductModels.Product[] = [];
-  pagination: fromProductModels.Pagination;
   currentUrl: string;
+  vm$: Observable<fromProductSelectors.ProductsViewModel>;
 
   ngOnInit(): void {
-    this.loadProducts(
-      this.paginationService.createUrl(
-        '0',
-        '999',
-        '1',
-        '25',
-        environment.baseUrl + 'products?'
-      )
+    this.vm$ = this.store.pipe(
+      select(fromProductSelectors.selectProductsViewModel)
     );
+
+    const url = this.paginationService.createUrl(
+      '0',
+      '999',
+      '1',
+      '25',
+      environment.baseUrl + 'products?'
+    );
+
+    this.loadProducts(url);
   }
 
   loadProducts(url: string) {
-    this.currentUrl = url;
-    this.spinner.show();
-    const productsObserver = {
-      next: (response) => {
-        this.products = response.result;
-        this.pagination = response.pagination;
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1000);
-      },
-      error: (err) => {
-        console.error(err);
-        this.alertService.danger('Unable to load products');
-        this.spinner.hide();
-      },
-    };
-
-    this.productService.getProducts(url).subscribe(productsObserver);
+    this.store.dispatch(loadAdminProducts({ url }));
   }
 
   deleteProduct(id: number) {
